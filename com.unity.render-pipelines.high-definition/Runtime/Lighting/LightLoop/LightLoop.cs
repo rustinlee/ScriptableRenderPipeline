@@ -3050,6 +3050,8 @@ namespace UnityEngine.Rendering.HighDefinition
         }
 
         static void RenderContactShadows(   in ContactShadowsParameters parameters,
+                                            RTHandle                    contactShadowRT,
+                                            RTHandle                    depthTexture,
                                             LightLoopLightData          lightLoopLightData,
                                             TileAndClusterData          tileAndClusterData,
                                             CommandBuffer               cmd)
@@ -3064,14 +3066,13 @@ namespace UnityEngine.Rendering.HighDefinition
             cmd.SetComputeBufferParam(parameters.contactShadowsCS, parameters.kernel, HDShaderIDs._LightDatas, lightLoopLightData.lightData);
             cmd.SetComputeBufferParam(parameters.contactShadowsCS, parameters.kernel, HDShaderIDs.g_vLightListGlobal, tileAndClusterData.lightList);
 
-            var depthTexture = hdCamera.frameSettings.IsEnabled(FrameSettingsField.MSAA) ? m_SharedRTManager.GetDepthValuesTexture() : m_SharedRTManager.GetDepthTexture();
             cmd.SetComputeTextureParam(parameters.contactShadowsCS, parameters.kernel, parameters.depthTextureParameterName, depthTexture);
-            cmd.SetComputeTextureParam(parameters.contactShadowsCS, parameters.kernel, HDShaderIDs._ContactShadowTextureUAV, m_ContactShadowBuffer);
+            cmd.SetComputeTextureParam(parameters.contactShadowsCS, parameters.kernel, HDShaderIDs._ContactShadowTextureUAV, contactShadowRT);
 
             cmd.DispatchCompute(parameters.contactShadowsCS, parameters.kernel, parameters.numTilesX, parameters.numTilesY, parameters.viewCount);
         }
 
-        void RenderContactShadows(HDCamera hdCamera, RTHandle contactShadowRT, RTHandle depthTexture, int firstMipOffsetY, CommandBuffer cmd)
+        void RenderContactShadows(HDCamera hdCamera, CommandBuffer cmd)
         {
             // if there is no need to compute contact shadows, we just quit
             if (!WillRenderContactShadow())
@@ -3081,9 +3082,10 @@ namespace UnityEngine.Rendering.HighDefinition
             {
                 m_ShadowManager.BindResources(cmd);
 
+                var depthTexture = hdCamera.frameSettings.IsEnabled(FrameSettingsField.MSAA) ? m_SharedRTManager.GetDepthValuesTexture() : m_SharedRTManager.GetDepthTexture();
+                int firstMipOffsetY = m_SharedRTManager.GetDepthBufferMipChainInfo().mipLevelOffsets[1].y;
                 var parameters = PrepareContactShadowsParameters(hdCamera, firstMipOffsetY);
-                RenderContactShadows(parameters, contactShadowRT, depthTexture, m_LightLoopLightData, m_TileAndClusterData, cmd);
-
+                RenderContactShadows(parameters, m_ContactShadowBuffer, depthTexture, m_LightLoopLightData, m_TileAndClusterData, cmd);
             }
         }
 

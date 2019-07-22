@@ -98,7 +98,7 @@ namespace UnityEngine.Rendering
             m_TaskStage = AsyncTaskStage.AsyncCmdEnqueued;
         }
 
-        public void EndWithPostWork(CommandBuffer cmd, Action postWork)
+        public void EndWithPostWork(CommandBuffer cmd, HDCamera hdCamera, Action<CommandBuffer, HDCamera> postWork)
         {
             Debug.Assert(m_TaskStage == AsyncTaskStage.AsyncCmdEnqueued);
 
@@ -107,14 +107,14 @@ namespace UnityEngine.Rendering
 #else
             cmd.WaitOnGPUFence(m_EndFence);
 #endif
-            postWork();
+            postWork(cmd, hdCamera);
 
             m_TaskStage = AsyncTaskStage.TaskCompleted;
         }
 
-        public void End(CommandBuffer cmd)
+        public void End(CommandBuffer cmd, HDCamera hdCamera)
         {
-            EndWithPostWork(cmd, () => { });
+            EndWithPostWork(cmd, hdCamera, (_1, _2) => { });
         }
     }
 
