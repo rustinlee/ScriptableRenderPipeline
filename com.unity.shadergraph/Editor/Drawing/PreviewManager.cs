@@ -449,8 +449,8 @@ namespace UnityEditor.ShaderGraph.Drawing
                     continue;
                 }
                 ShaderUtil.ClearCachedData(renderData.shaderData.shader);
-                // Always explicitly use pass 0 for preview shaders
-                BeginCompile(renderData, results.shader, 0);
+                
+                BeginCompile(renderData, results.shader);
                 //get the preview mode from generated results
                 renderData.previewMode = results.previewMode;
             }
