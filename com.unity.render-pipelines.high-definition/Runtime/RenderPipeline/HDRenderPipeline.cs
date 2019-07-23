@@ -1072,10 +1072,14 @@ namespace UnityEngine.Rendering.HighDefinition
             var dynResHandler = DynamicResolutionHandler.instance;
             dynResHandler.Update(m_Asset.currentPlatformRenderPipelineSettings.dynamicResolutionSettings, () =>
             {
-                m_PostProcessSystem.ResetHistory();
-                if(dynResHandler.DynamicResolutionEnabled())
+                var hdrp = (RenderPipelineManager.currentPipeline as HDRenderPipeline);
+                hdrp.m_PostProcessSystem.ResetHistory();
+                // We can't use dynResHandler here because it would capture the local field and so generate garbage
+                if (DynamicResolutionHandler.instance.DynamicResolutionEnabled())
                 {
-                    m_SharedRTManager.ComputeDepthBufferMipChainSize(dynResHandler.GetRTHandleScale(new Vector2Int(m_SharedRTManager.GetDepthStencilBuffer().rt.width, m_SharedRTManager.GetDepthStencilBuffer().rt.height)));
+                    var stencilBuffer = hdrp.m_SharedRTManager.GetDepthStencilBuffer().rt;
+                    var stencilBufferSize = new Vector2Int(stencilBuffer.width, stencilBuffer.height);
+                    hdrp.m_SharedRTManager.ComputeDepthBufferMipChainSize(DynamicResolutionHandler.instance.GetRTHandleScale(stencilBufferSize));
                 }
             }
             );
@@ -1356,8 +1360,8 @@ namespace UnityEngine.Rendering.HighDefinition
                         camera.targetTexture = visibleProbe.realtimeTexture; // We need to set a targetTexture with the right otherwise when setting pixelRect, it will be rescaled internally to the size of the screen
                         camera.gameObject.hideFlags = HideFlags.HideAndDontSave;
                         camera.gameObject.SetActive(false);
-                        // Warning: accessing Object.name generate 48B at each frame here
-                        camera.name = ComputeProbeCameraName(visibleProbe.name, j, viewerTransform?.name);
+                        // Warning: accessing Object.name generate 48B of garbage at each frame here
+                        camera.name = HDUtils.ComputeProbeCameraName(visibleProbe.name, j, viewerTransform?.name);
                         camera.ApplySettings(cameraSettings[j]);
                         camera.ApplySettings(cameraPositionSettings[j]);
                         camera.cameraType = CameraType.Reflection;
@@ -1543,6 +1547,7 @@ namespace UnityEngine.Rendering.HighDefinition
                         {
                         using (new ProfilingSample(
                             cmd,
+                                // Warning: accessing .name here allocate 48B of garbage each frame plus some more for the string interpolation
                                 $"HDRenderPipeline::Render {renderRequest.hdCamera.camera.name} - AOVRequest {aovRequestIndex++}",
                                 CustomSamplerId.HDRenderPipelineRender.GetSampler())
                             )
@@ -1559,7 +1564,8 @@ namespace UnityEngine.Rendering.HighDefinition
 
                         using (new ProfilingSample(
                             cmd,
-                            $"HDRenderPipeline::Render {renderRequest.hdCamera.camera.name}",
+                            // Warning: accessing .name here allocate 48B of garbage each frame.
+                            HDUtils.ComputeCameraName(renderRequest.hdCamera.camera.name),
                             CustomSamplerId.HDRenderPipelineRender.GetSampler())
                         )
                         {
@@ -2213,56 +2219,6 @@ namespace UnityEngine.Rendering.HighDefinition
                 renderContext.ExecuteCommandBuffer(cmd);
                 CommandBufferPool.Release(cmd);
             }
-        }
-
-        // $"HDProbe RenderCamera ({probeName}: {face:00} for viewer '{viewerName}')"
-        unsafe string ComputeProbeCameraName(string probeName, int face, string viewerName)
-        {
-            // Interpolate the camera name with as few allocation as possible
-            const string pattern1 = "HDProbe RenderCamera (";
-            const string pattern2 = ": ";
-            const string pattern3 = " for viewer '";
-            const string pattern4 = "')";
-            const int maxCharCountPerName = 40;
-            const int charCountPerNumber = 2;
-
-            probeName = probeName ?? string.Empty;
-            viewerName = viewerName ?? "null";
-
-            var probeNameSize = Mathf.Min(probeName.Length, maxCharCountPerName);
-            var viewerNameSize = Mathf.Min(viewerName.Length, maxCharCountPerName);
-            int size = pattern1.Length + probeNameSize
-                + pattern2.Length + charCountPerNumber
-                + pattern3.Length + viewerNameSize
-                + pattern4.Length;
-
-            var buffer = stackalloc char[size];
-            var p = buffer;
-            int i, c, s = 0;
-            for (i = 0; i < pattern1.Length; ++i, ++p)
-                *p = pattern1[i];
-            for (i = 0, c = Mathf.Min(probeName.Length, maxCharCountPerName); i < c; ++i, ++p)
-                *p = probeName[i];
-            s += c;
-            for (i = 0; i < pattern2.Length; ++i, ++p)
-                *p = pattern2[i];
-
-            // Fast, no-GC index.ToString("2")
-            var temp = (face * 205) >> 11;  // 205/2048 is nearly the same as /10
-            *(p++) = (char)(temp + '0');
-            *(p++) = (char)((face - temp * 10) + '0');
-            s += charCountPerNumber;
-
-            for (i = 0; i < pattern3.Length; ++i, ++p)
-                *p = pattern3[i];
-            for (i = 0, c = Mathf.Min(viewerName.Length, maxCharCountPerName); i < c; ++i, ++p)
-                *p = viewerName[i];
-            s += c;
-            for (i = 0; i < pattern4.Length; ++i, ++p)
-                *p = pattern4[i];
-
-            s += pattern1.Length + pattern2.Length + pattern3.Length + pattern4.Length;
-            return new string(buffer, 0, s);
         }
 
         bool TryCalculateFrameParameters(
