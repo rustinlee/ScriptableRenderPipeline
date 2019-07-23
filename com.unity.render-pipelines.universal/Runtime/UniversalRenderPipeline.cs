@@ -466,7 +466,13 @@ namespace UnityEngine.Rendering.Universal
             var configuration = PerObjectData.ReflectionProbes | PerObjectData.Lightmaps | PerObjectData.LightProbe | PerObjectData.LightData | PerObjectData.OcclusionProbe;
 
             if (additionalLightsCount > 0)
-                configuration |= PerObjectData.LightIndices;
+            {
+                configuration |= PerObjectData.LightData;
+
+                // In this case we also need per-object indices (unity_LightIndices)
+                if (!RenderingUtils.useStructuredBuffer)
+                    configuration |= PerObjectData.LightIndices;
+            }
 
             return configuration;
         }
