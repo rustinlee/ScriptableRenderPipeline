@@ -1920,7 +1920,6 @@ namespace UnityEngine.Rendering.HighDefinition
 
                     void Callback(CommandBuffer c, HDCamera cam)
                     {
-                        // Anti garbage pattern :thinking_face:
                         var hdrp = (RenderPipelineManager.currentPipeline as HDRenderPipeline);
                         var globalParams = hdrp.PrepareLightLoopGlobalParameters(cam);
                         PushLightLoopGlobalParams(globalParams, c);
