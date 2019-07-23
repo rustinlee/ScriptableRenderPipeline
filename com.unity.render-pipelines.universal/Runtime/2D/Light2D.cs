@@ -2,18 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.Serialization;
 using UnityEngine.Rendering;
-using UnityEngine.Scripting.APIUpdating;
 #if UNITY_EDITOR
 using UnityEditor.Experimental.SceneManagement;
 #endif
-
-namespace UnityEngine.Experimental.Rendering.LWRP
-{
-    [Obsolete("LWRP -> Universal (UnityUpgradable) -> UnityEngine.Experimental.Rendering.Universal.Light2D", true)]
-    public class Light2D
-    {}
-}
-
 
 namespace UnityEngine.Experimental.Rendering.Universal
 {
@@ -132,8 +123,6 @@ namespace UnityEngine.Experimental.Rendering.Universal
         /// an enumeration of the types of light
         /// </summary>
         
-        //[MovedFrom("UnityEngine.Experimental.Rendering.LWRP")] 
-        // Light2D ?
         public enum LightType
         {
             Parametric = 0,
