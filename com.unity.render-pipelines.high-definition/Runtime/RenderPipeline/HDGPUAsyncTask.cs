@@ -13,7 +13,6 @@ namespace UnityEngine.Rendering
 {
     struct HDGPUAsyncTaskParams
     {
-        public CommandBuffer            cmd;
         public ScriptableRenderContext  renderContext;
         public HDCamera                 hdCamera;
         public int                      frameCount;
@@ -62,12 +61,12 @@ namespace UnityEngine.Rendering
             m_TaskStage = AsyncTaskStage.StartFenceCreated;
         }
 
-        public void Start(HDGPUAsyncTaskParams asyncParams, Action<HDGPUAsyncTaskParams> asyncTask, bool pushStartFence = true)
+        public void Start(CommandBuffer cmd, in HDGPUAsyncTaskParams asyncParams, Action<CommandBuffer, HDGPUAsyncTaskParams> asyncTask, bool pushStartFence = true)
         {
             Debug.Assert(m_TaskStage == AsyncTaskStage.NotTriggered);
             if (pushStartFence)
             {
-                PushStartFenceAndExecuteCmdBuffer(asyncParams.cmd, asyncParams.renderContext);
+                PushStartFenceAndExecuteCmdBuffer(cmd, asyncParams.renderContext);
             }
 
             CommandBuffer asyncCmd = CommandBufferPool.Get(m_TaskName);
@@ -84,8 +83,7 @@ namespace UnityEngine.Rendering
 #endif
             }
 
-            asyncParams.cmd = asyncCmd;
-            asyncTask(asyncParams);
+            asyncTask(asyncCmd, asyncParams);
 
 #if UNITY_2019_1_OR_NEWER
             m_EndFence = asyncCmd.CreateAsyncGraphicsFence();

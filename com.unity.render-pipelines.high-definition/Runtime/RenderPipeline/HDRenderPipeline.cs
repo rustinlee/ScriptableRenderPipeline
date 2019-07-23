@@ -1853,7 +1853,6 @@ namespace UnityEngine.Rendering.HighDefinition
                 // Avoid garbage by explicitely passing parameters to the lambdas
                 var asyncParams = new HDGPUAsyncTaskParams
                 {
-                    cmd = cmd,
                     renderContext = renderContext,
                     hdCamera = hdCamera,
                     frameCount = m_FrameCount,
@@ -1862,41 +1861,41 @@ namespace UnityEngine.Rendering.HighDefinition
                 var haveAsyncTaskWithShadows = false;
                 if (hdCamera.frameSettings.BuildLightListRunsAsync())
                 {
-                    buildLightListTask.Start(asyncParams, Callback, !haveAsyncTaskWithShadows);
+                    buildLightListTask.Start(cmd, asyncParams, Callback, !haveAsyncTaskWithShadows);
 
                     haveAsyncTaskWithShadows = true;
 
-                    void Callback(HDGPUAsyncTaskParams a)
-                        => BuildGPULightListsCommon(a.hdCamera, a.cmd);
+                    void Callback(CommandBuffer c, HDGPUAsyncTaskParams a)
+                        => BuildGPULightListsCommon(a.hdCamera, c);
                 }
 
                 if (hdCamera.frameSettings.VolumeVoxelizationRunsAsync())
                 {
-                    volumeVoxelizationTask.Start(asyncParams, Callback, !haveAsyncTaskWithShadows);
+                    volumeVoxelizationTask.Start(cmd, asyncParams, Callback, !haveAsyncTaskWithShadows);
 
                     haveAsyncTaskWithShadows = true;
 
-                    void Callback(HDGPUAsyncTaskParams a)
-                        => VolumeVoxelizationPass(a.hdCamera, a.cmd);
+                    void Callback(CommandBuffer c, HDGPUAsyncTaskParams a)
+                        => VolumeVoxelizationPass(a.hdCamera, c);
                 }
 
                 if (hdCamera.frameSettings.SSRRunsAsync())
                 {
-                    SSRTask.Start(asyncParams, Callback, !haveAsyncTaskWithShadows);
+                    SSRTask.Start(cmd, asyncParams, Callback, !haveAsyncTaskWithShadows);
 
                     haveAsyncTaskWithShadows = true;
 
-                void Callback(HDGPUAsyncTaskParams a)
-                        => RenderSSR(a.hdCamera, a.cmd, a.renderContext);
+                void Callback(CommandBuffer c, HDGPUAsyncTaskParams a)
+                        => RenderSSR(a.hdCamera, c, a.renderContext);
                 }
 
                 if (hdCamera.frameSettings.SSAORunsAsync())
                 {
-                    SSAOTask.Start(asyncParams, AsyncSSAODispatch, !haveAsyncTaskWithShadows);
+                    SSAOTask.Start(cmd, asyncParams, AsyncSSAODispatch, !haveAsyncTaskWithShadows);
                     haveAsyncTaskWithShadows = true;
                     
-                    void AsyncSSAODispatch(HDGPUAsyncTaskParams a)
-                        => m_AmbientOcclusionSystem.Dispatch(a.cmd, a.hdCamera, a.frameCount);
+                    void AsyncSSAODispatch(CommandBuffer c, HDGPUAsyncTaskParams a)
+                        => m_AmbientOcclusionSystem.Dispatch(c, a.hdCamera, a.frameCount);
                 }
 
                 using (new ProfilingSample(cmd, "Render shadow maps", CustomSamplerId.RenderShadowMaps.GetSampler()))

@@ -1077,8 +1077,6 @@ namespace UnityEngine.Rendering.HighDefinition
             }
         }
 
-        DirectionalLightData lightData = new DirectionalLightData();
-
         internal bool GetDirectionalLightData(CommandBuffer cmd, HDCamera hdCamera, GPULightType gpuLightType, VisibleLight light,
             Light lightComponent, HDAdditionalLightData additionalLightData, int lightIndex, int shadowIndex,
             DebugDisplaySettings debugDisplaySettings, int sortedIndex, ref int screenSpaceShadowIndex, bool isPysicallyBasedSkyActive)
@@ -1095,6 +1093,8 @@ namespace UnityEngine.Rendering.HighDefinition
             // Discard light if disabled in debug display settings
             if (!debugDisplaySettings.data.lightingDebugSettings.showDirectionalLight)
                 return false;
+
+            var lightData = new DirectionalLightData();
 
             lightData.lightLayers = additionalLightData.GetLightLayers();
 
