@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // SurfaceData and BSDFData
 //-----------------------------------------------------------------------------
-// SurfaceData is defined in Fabric.cs which generates Fabric.cs.hlsl
+// SurfaceData is defined in Eye.cs which generates Eye.cs.hlsl
 #include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Eye/Eye.cs.hlsl"
 // Those define allow to include desired SSS/Transmission functions
 #define MATERIAL_INCLUDE_SUBSURFACESCATTERING
@@ -77,11 +77,6 @@ void ApplyDebugToSurfaceData(float3x3 tangentToWorld, inout SurfaceData surfaceD
 #endif
 }
 
-// This function is similar to ApplyDebugToSurfaceData but for BSDFData
-// Note: This will be available and used in ShaderPassForward.hlsl since in Fabric.shader,
-// just before including the core code of the pass (ShaderPassForward.hlsl) we include
-// Material.hlsl (or Lighting.hlsl which includes it) which in turn includes us,
-// Fabric.shader, via the #if defined(UNITY_MATERIAL_*) glue mechanism.
 void ApplyDebugToBSDFData(inout BSDFData bsdfData)
 {
 #ifdef DEBUG_DISPLAY
@@ -482,7 +477,6 @@ DirectLighting EvaluateBSDF_Directional(LightLoopContext lightLoopContext,
     return dl;
 }
 
-#include "Packages/com.unity.render-pipelines.high-definition/Runtime/Material/Fabric/FabricReference.hlsl"
 //-----------------------------------------------------------------------------
 // EvaluateBSDF_Punctual (supports spot, point and projector lights)
 //-----------------------------------------------------------------------------

@@ -447,7 +447,7 @@ namespace UnityEditor.Rendering.HighDefinition
             if (sourceAssetDependencyPaths != null)
             {
                 //EyeSubShader.cs
-                sourceAssetDependencyPaths.Add(AssetDatabase.GUIDToAssetPath("a6c6137838fa5da44a84ef8b04b4eae2"));
+                sourceAssetDependencyPaths.Add(AssetDatabase.GUIDToAssetPath("951ab98b405c28447801dbe209dfc34f"));
                 // HDSubShaderUtilities.cs
                 sourceAssetDependencyPaths.Add(AssetDatabase.GUIDToAssetPath("713ced4e6eef4a44799a4dd59041484b"));
             }
