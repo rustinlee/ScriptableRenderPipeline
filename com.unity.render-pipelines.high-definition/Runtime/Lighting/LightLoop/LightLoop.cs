@@ -503,6 +503,11 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         {
             return m_ShadowManager;
         }
+
+        public float GetSpecularGlobalDimmer()
+        {
+            return m_FrameSettings.specularGlobalDimmer;
+        }
         // custom-end
 
         public LightLoop()

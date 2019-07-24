@@ -259,7 +259,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         }
 
         AdditionalShadowData _ShadowData;
-        AdditionalShadowData m_ShadowData
+        public AdditionalShadowData m_ShadowData
         {
             get
             {
@@ -281,7 +281,14 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
 
             m_WillRenderShadows = legacyLight.shadows != LightShadows.None && frameSettings.IsEnabled(FrameSettingsField.Shadow);
 
-            m_WillRenderShadows &= cullResults.GetShadowCasterBounds(lightIndex, out bounds);
+            // custom-begin:
+            // Force shadows to render on layer #7, even outside the frustum.
+            if ((lightLayers & 7u) == 0u)
+            {
+            // custom-end
+                m_WillRenderShadows &= cullResults.GetShadowCasterBounds(lightIndex, out bounds);
+            }
+
             // When creating a new light, at the first frame, there is no AdditionalShadowData so we can't really render shadows
             m_WillRenderShadows &= m_ShadowData != null && m_ShadowData.shadowDimmer > 0;
             // If the shadow is too far away, we don't render it
@@ -348,7 +355,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         }
 
         // This offset shift the position of the spotlight used to approximate the area light shadows. The offset is the minimum such that the full
-        // area light shape is included in the cone spanned by the spot light. 
+        // area light shape is included in the cone spanned by the spot light.
         public static float GetAreaLightOffsetForShadows(Vector2 shapeSize, float coneAngle)
         {
             float rectangleDiagonal = shapeSize.magnitude;
@@ -656,7 +663,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
                 return useColorTemperatureProperty.boolValue;
             }
         }
-        
+
         public static bool IsAreaLight(SerializedProperty lightType)
         {
             return IsAreaLight((LightTypeExtent)lightType.enumValueIndex);
