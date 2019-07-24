@@ -52,11 +52,11 @@ projects:
     - ssh -i ~/.ssh/id_rsa_macmini -o "StrictHostKeyChecking=no" bokken@$BOKKEN_DEVICE_IP 'cd ~/ScriptableRenderPipeline/TestProjects/{{ project.folder }} && ./utr/utr {{ testplatform.args }}{{ platform.name }} --testproject=/Users/bokken/ScriptableRenderPipeline/TestProjects/{{ project.folder }} --editor-location=/Users/bokken/.Editor --artifacts_path=upm-ci~/test-results'
     {% else %}
     - |
-      local RESULTS
+      bash 'local RESULTS
       RESULTS=$(ssh -i ~/.ssh/id_rsa_macmini -o "StrictHostKeyChecking=no" bokken@$BOKKEN_DEVICE_IP 'cd ~/ScriptableRenderPipeline/TestProjects/{{ project.folder }} && ~/ScriptableRenderPipeline/TestProjects/{{ project.folder }}/utr/utr {{ testplatform.args }} --testproject=/Users/bokken/ScriptableRenderPipeline/TestProjects/{{ project.folder }} --editor-location=/Users/bokken/.Editor --artifacts_path=upm-ci~/test-results')
-      echo $?
+      echo $?'
     {% endif %}
-    - scp -i ~/.ssh/id_rsa_macmini -o "StrictHostKeyChecking=no" -r bokken@$BOKKEN_DEVICE_IP:/Users/bokken/ScriptableRenderPipeline/TestProjects/{{ project.folder }}/upm-ci~/ /Users/bokken/ScriptableRenderPipeline/TestProjects/{{ project.folder }}/upm-ci~/
+    - scp -i ~/.ssh/id_rsa_macmini -o "StrictHostKeyChecking=no" -r bokken@$BOKKEN_DEVICE_IP:/Users/bokken/ScriptableRenderPipeline/TestProjects/{{ project.folder }}/upm-ci~/ ~/ScriptableRenderPipeline/TestProjects/{{ project.folder }}/upm-ci~/
   artifacts:
     logs:
       paths:
