@@ -22,7 +22,7 @@ projects:
     packagename: com.unity.render-pipelines.universal
   - name: simple
     folder: simple-pass
-    packagename: com.unity.render-pipelines.universal
+    packagename: none
 ---
 {% for project in projects %}
 {% for editor in editors %}
