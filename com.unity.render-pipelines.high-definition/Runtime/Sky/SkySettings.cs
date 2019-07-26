@@ -81,13 +81,8 @@ namespace UnityEngine.Rendering.HighDefinition
                 hash = hash * 23 + exposure.GetHashCode();
                 hash = hash * 23 + multiplier.GetHashCode();
                 hash = hash * 23 + desiredLuxValue.GetHashCode();
-
-                // TODO: Fixme once we switch to .Net 4.6+
-                //>>>
-                hash = hash * 23 + ((int)updateMode.value).GetHashCode();
-                hash = hash * 23 + ((int)skyIntensityMode.value).GetHashCode();
-                //<<<
-
+                hash = hash * 23 + updateMode.value.GetHashCode();
+                hash = hash * 23 + skyIntensityMode.value.GetHashCode();
                 hash = hash * 23 + updatePeriod.GetHashCode();
                 hash = hash * 23 + includeSunInBaking.GetHashCode();
                 return hash;

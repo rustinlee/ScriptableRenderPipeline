@@ -1548,7 +1548,8 @@ namespace UnityEngine.Rendering.HighDefinition
                         using (new ProfilingSample(
                             cmd,
                                 // Warning: accessing .name here allocate 48B of garbage each frame plus some more for the string interpolation
-                                $"HDRenderPipeline::Render {renderRequest.hdCamera.camera.name} - AOVRequest {aovRequestIndex++}",
+                                // $"HDRenderPipeline::Render {renderRequest.hdCamera.camera.name} - AOVRequest {aovRequestIndex++}",
+                                "HDRenderPipeline::Render AOV Request",
                                 CustomSamplerId.HDRenderPipelineRender.GetSampler())
                             )
                             {
@@ -1565,7 +1566,8 @@ namespace UnityEngine.Rendering.HighDefinition
                         using (new ProfilingSample(
                             cmd,
                             // Warning: accessing .name here allocate 48B of garbage each frame.
-                            HDUtils.ComputeCameraName(renderRequest.hdCamera.camera.name),
+                            // HDUtils.ComputeCameraName(renderRequest.hdCamera.camera.name),
+                            "HDRenderPipeline::Render Camera",
                             CustomSamplerId.HDRenderPipelineRender.GetSampler())
                         )
                         {
