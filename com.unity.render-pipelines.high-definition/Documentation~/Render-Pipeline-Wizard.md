@@ -1,4 +1,4 @@
-# Render Pipeline Wizard
+# HD Render Pipeline Wizard
 
 The High Definition Render Pipeline (HDRP) includes the **HD Render Pipeline Wizard** to help you configure your Unity Project so that it is compatible with HDRP. 
 
@@ -6,12 +6,23 @@ To open the **Render Pipeline Wizard**, go to **Window > Render Pipeline** and s
 
 ![](Images/RenderPipelineWizard1.png)
 
-## Contents
+## Default Path Settings
 
 | **Property**                 | **Description**                                              |
 | ---------------------------- | ------------------------------------------------------------ |
 | **Default Resources Folder** | Set the folder name that the Render Pipeline Wizard uses when it loads or creates resources. Click the **Populate / Reset** button to populate the **Default Resources Folder** with the resources that HDRP needs to render a Scene (for details, see [Populating the default resources folder](#PopulatingFolder)). If a default Asset already exists in the folder then clicking the Populate/Reset button resets the existing Asset. |
 | **Default Scene Prefab**     | Set the default Prefab that Unity needs to instantiate in a new Scene when you select **File > New Scene**. To instantly create a Scene Asset with this template, go to **Assets > Create** and click **HD Template Scene**. |
+
+### Populating the default resources folder
+
+When you click **Populate/Reset**, HDRP generates the following Assets:
+
+- **DefaultSceneRoot**: The Prefab that Unity instantiates in each new HDRP template Scene.
+- **DefautRenderingSettings**: The default [Volume Profile](Volume-Profile.html) that the template Scene uses to render visual elements like shadows, fog, and the sky.
+- **DefautPostprocessingSettings**: The default [Volume Profile](Volume-Profile.html) that the template Scene uses for post-processing effects.
+- **HDRenderPipellineAsset**: The [HDRP Asset](HDRP-Asset.html) that Unity uses to configure HDRP settings for the Unity Project.
+- **Foliage Diffusion Profile**: A [Diffusion Profile](Diffusion-Profile.html) that simulates sub-surface light interaction with foliage.
+- **Skin Diffusion Profile**: A [Diffusion Profile](Diffusion-Profile.html) that simulates sub-surface light interaction with skin.
 
 ## HDRP configuration checker
 
@@ -39,17 +50,15 @@ Your Unity Project must adhere to all the configuration tests in this section fo
 | **Auto Graphics API**            | Checks to make sure **Auto Graphics API** is not checked in the Player Settings regarding your current plateform. DXR need it to force recquired **Direct3D 12**. Press the **Fix** button to make uncheck it. |
 | **Direct3D 12**                  | Checks to make sure **Direct3D 12** is the first Graphic API set in Player Settings regarding your current plateform. Press the **Fix** button to make Unity use **Direct3D 12** as Graphic API. |
 | **Scripting Symbols**            | Checks to make sure **Scripting Symbols** in Player Settings contains **REALTIME_RAYTRACING_SUPPORT** (regarding your current plateform). Press the **Fix** button to add **REALTIME_RAYTRACING_SUPPORT** to **Scripting Symbols**. |
+| **Screen Space Shadow**          | Checks to make sure **Screen Space Shadow** is check in the current [HDRP Asset](HDRP-Asset.html). Press the **Fix** button to Check it. |
 | **DXR Activated**                | Checks to make sure **DXR Activated** is check in the current [HDRP Asset](HDRP-Asset.html). Press the **Fix** button to Check it. |
 | **DXR Ressources**               | Checks to make sure that your HDRP Asset references a **HD Render Pipeline RayTracing Resources**  Asset. Press the **Fix** button to reload the raytracing resources for the HDRP Asset. |
 
+## Project Migration Quick-links
 
-### Populating the default resources folder
+When upgrading a project from built-in render pipeline, you need to do some operation on your Light component and on your Materials. In this section you can find three utility function for this.
 
-When you click **Populate/Reset**, HDRP generates the following Assets:
+- **Upgrade Project Materials to High Definition Materials**: will upgrade every materials in the project to high definition materials.
+- **Upgrade Selected Materials to High Definition Materials**: will upgrade only materials currently selected to high definition materials.
+- **Upgrade Unity Builtin Scene Light Intensity for High Definition**: will upgrade each light in the active scene to have intensity compatible with High Definition Render Pipeline.
 
-- **DefaultSceneRoot**: The Prefab that Unity instantiates in each new HDRP template Scene.
-- **DefautRenderingSettings**: The default [Volume Profile](Volume-Profile.html) that the template Scene uses to render visual elements like shadows, fog, and the sky.
-- **DefautPostprocessingSettings**: The default [Volume Profile](Volume-Profile.html) that the template Scene uses for post-processing effects.
-- **HDRenderPipellineAsset**: The [HDRP Asset](HDRP-Asset.html) that Unity uses to configure HDRP settings for the Unity Project.
-- **Foliage Diffusion Profile**: A [Diffusion Profile](Diffusion-Profile.html) that simulates sub-surface light interaction with foliage.
-- **Skin Diffusion Profile**: A [Diffusion Profile](Diffusion-Profile.html) that simulates sub-surface light interaction with skin.
