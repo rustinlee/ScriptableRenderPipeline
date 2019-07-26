@@ -14,8 +14,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added the documentation page "Rendering in LWRP", which describes the forward rendering camera loop.
 - Added documentation overview for how Post Processing Version 2 works in LWRP.
 - Added documentation notes and FAQ entry on the 2D Renderer affecting the LWRP Asset.
+## [7.1.1] - 2019-XX-XX
 
-## [7.0.0] - 2019-07-10
+## [7.0.1] - 2019-07-25
+
+Version Updated
+The version number for this package has increased due to a version update of a related graphics package.
+
+## [7.0.0] - 2019-07-17
 ### Changed
 - LWRP is being deprecated in favour of Universal Render Pipeline. See the changelog for the UniversalRP Package.
 
