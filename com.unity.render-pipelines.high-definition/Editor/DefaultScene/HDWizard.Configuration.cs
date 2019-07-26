@@ -250,6 +250,7 @@ namespace UnityEditor.Rendering.HighDefinition
             if (ObjectSelector.opened)
                 return;
             CreateOrLoadDefaultScene(async ? () => EditorApplication.update -= FixHDRPAllAsync : (Action)null, scene => HDProjectSettings.defaultScenePrefab = scene);
+            m_DefaultScene.SetValueWithoutNotify(HDProjectSettings.defaultScenePrefab);
         }
 
         #endregion

@@ -98,6 +98,7 @@ namespace UnityEditor.Rendering.HighDefinition
 
         Configuration m_Configuration;
         VisualElement m_BaseUpdatable;
+        ObjectField m_DefaultScene;
 
         [MenuItem("Window/Render Pipeline/HD Render Pipeline Wizard", priority = 10000)]
         static void OpenWindow()
@@ -170,7 +171,7 @@ namespace UnityEditor.Rendering.HighDefinition
 
             container.Add(CreateTitle(Style.defaultSettingsTitle));
             container.Add(CreateFolderData());
-            container.Add(CreateDefaultScene());
+            container.Add(m_DefaultScene = CreateDefaultScene());
             
             container.Add(CreateTitle(Style.configurationTitle));
             container.Add(CreateTabbedBox(
@@ -266,7 +267,7 @@ namespace UnityEditor.Rendering.HighDefinition
             return row;
         }
 
-        VisualElement CreateDefaultScene()
+        ObjectField CreateDefaultScene()
         {
             var newScene = new ObjectField(Style.newSceneLabel)
             {
