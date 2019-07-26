@@ -91,9 +91,7 @@ test_{{ package.id }}_{{ platform.name }}_{{ editor.version }}:
     image: {{ platform.agent.image }}
     flavor: {{ platform.agent.flavor }}
   commands:
-    #- npm install upm-ci-utils@stable -g --registry https://api.bintray.com/npm/unity/unity-npm
-    - git clone --single-branch --branch release/0.14.2 git@github.cds.internal.unity3d.com:unity/upm-ci-utils.git ../upm-ci-utils
-    - npm install -g ../upm-ci-utils
+    - npm install upm-ci-utils@latest -g --registry https://api.bintray.com/npm/unity/unity-npm
     {% if package.hascodependencies %}
     - pip install unity-downloader-cli --extra-index-url https://artifactory.eu-cph-1.unityops.net/api/pypi/common-python/simple
     - unity-downloader-cli -u {{ editor.version }} -c editor --wait
