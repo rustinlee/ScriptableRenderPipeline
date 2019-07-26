@@ -1,4 +1,4 @@
-# HD Render Pipeline Wizard
+# High Definition Render Pipeline Wizard
 
 The High Definition Render Pipeline (HDRP) includes the **HD Render Pipeline Wizard** to help you configure your Unity Project so that it is compatible with HDRP. 
 
