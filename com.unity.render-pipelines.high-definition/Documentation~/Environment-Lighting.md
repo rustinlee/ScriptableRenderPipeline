@@ -47,7 +47,7 @@ HDRP comes with three built-in [sky types](HDRP-Features.html#SkyOverview):
 - [Gradient Sky](Override-Gradient-Sky.html)
 - [Physically Based Sky](Override-Physically-Based-Sky.html)
 
-HDRP also includes [Procedural Sky](Override-Procedural-Sky.html), which is now deprecated and is thus no longer built-in. For information on how to add Procedural Sky to your Unity Project, see [Upgrading from 2019.2 to 2019.3 guide](Upgrading-From-2019.2-to-2019.3.html#ProceduralSky).
+HDRP also includes [Procedural Sky](Override-Procedural-Sky.html), which is now deprecated and is thus no longer built-in. For information on how to add Procedural Sky to your HDRP Project, see the [Upgrading from 2019.2 to 2019.3 guide](Upgrading-From-2019.2-to-2019.3.html#ProceduralSky).
 
 HDRP allows you to implement your own sky types that display a background and handle environment lighting. See the [Customizing HDRP](Creating-a-Custom-Sky.html) documentation for instructions on how to implement your own sky.
 

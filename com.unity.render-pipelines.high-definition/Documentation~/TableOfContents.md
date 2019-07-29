@@ -58,7 +58,7 @@
     * [Lit Shader](Lit-Shader)
     * [Unlit Shader](Unlit-Shader)
   * Shader Graph master nodes
-    * [Editing Master Nodes]()
+    * [Creating and Editing Shader Graphs](Creating-and-Editing-HDRP-Shader-Graphs)
 * Lighting
   * [Reflection in HDRP](Reflection-in-HDRP)
   * [Refraction in HDRP](Refraction-in-HDRP)
