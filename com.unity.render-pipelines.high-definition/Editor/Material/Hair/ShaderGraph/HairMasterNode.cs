@@ -407,15 +407,15 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
         }
 
         [SerializeField]
-        bool m_AddVelocityChange = false;
-        public ToggleData addVelocityChange
+        bool m_AddPrecomputedVelocity = false;
+        public ToggleData addPrecomputedVelocity
         {
-            get { return new ToggleData(m_AddVelocityChange); }
+            get { return new ToggleData(m_AddPrecomputedVelocity); }
             set
             {
-                if (m_AddVelocityChange == value.isOn)
+                if (m_AddPrecomputedVelocity == value.isOn)
                     return;
-                m_AddVelocityChange = value.isOn;
+                m_AddPrecomputedVelocity = value.isOn;
                 Dirty(ModificationScope.Graph);
             }
         }
@@ -808,15 +808,14 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
                 hidden = true,
                 value = new Color(1.0f, 1.0f, 1.0f, 1.0f)
             });
-
-            //See SG-ADDITIONALVELOCITY-NOTE
-            if (addVelocityChange.isOn)
+            
+            if (addPrecomputedVelocity.isOn)
             {
                 collector.AddShaderProperty(new BooleanShaderProperty
                 {
                     value = true,
                     hidden = true,
-                    overrideReferenceName = kAdditionalVelocityChange,
+                    overrideReferenceName = kAddPrecomputedVelocity,
                 });
             }
 

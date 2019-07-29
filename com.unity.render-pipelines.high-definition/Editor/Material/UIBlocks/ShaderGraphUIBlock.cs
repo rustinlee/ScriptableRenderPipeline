@@ -147,9 +147,8 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
                 materialEditor.LightmapEmissionFlagsProperty(MaterialEditor.kMiniTextureFieldLabelIndentLevel, true, true);
             }
         }
-
-        // Track additional velocity state. See SG-ADDITIONALVELOCITY-NOTE
-        bool m_AdditionalVelocityChange = false;
+        
+        bool m_AddPrecomputedVelocity = false;
 
         void DrawMotionVectorToggle()
         {
@@ -169,17 +168,16 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
             bool enabled = materials[0].GetShaderPassEnabled(HDShaderPassNames.s_MotionVectorsStr);
             EditorGUI.BeginChangeCheck();
             enabled = EditorGUILayout.Toggle("Motion Vector For Vertex Animation", enabled);
-
-            // SG-ADDITIONALVELOCITY-NOTE:
+            
             // We would like to automatically enable the motion vector pass (handled on material UI side)
             // in case we have additional velocity change enabled in a graph. Due to serialization of material, changing
             // a value in between shadergraph compilations would have no effect on a material, so we instead
             // inform the motion vector UI via the existence of the property at all and query against that.
-            bool hasAdditionalVelocityChange = materials[0].HasProperty(kAdditionalVelocityChange);
-            if (m_AdditionalVelocityChange != hasAdditionalVelocityChange)
+            bool hasPrecomputedVelocity = materials[0].HasProperty(kAddPrecomputedVelocity);
+            if (m_AddPrecomputedVelocity != hasPrecomputedVelocity)
             {
-                enabled |= hasAdditionalVelocityChange;
-                m_AdditionalVelocityChange = hasAdditionalVelocityChange;
+                enabled |= hasPrecomputedVelocity;
+                m_AddPrecomputedVelocity = hasPrecomputedVelocity;
                 GUI.changed = true;
             }
 

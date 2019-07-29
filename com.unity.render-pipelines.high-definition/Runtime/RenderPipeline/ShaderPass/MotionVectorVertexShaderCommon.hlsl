@@ -5,8 +5,8 @@
 struct AttributesPass
 {
     float3 previousPositionOS : TEXCOORD4; // Contain previous transform position (in case of skinning for example)
-#if defined (_ADDITIONAL_VELOCITY_CHANGE)
-     float3 alembicVelocity    : TEXCOORD5; // Additional Velocity changes (Alembic computes velocities on runtime side).
+#if defined (_ADD_PRECOMPUTED_VELOCITY)
+     float3 alembicVelocity    : TEXCOORD5; // Add Precomputed Velocity (Alembic computes velocities on runtime side).
  #endif
 };
 
@@ -125,7 +125,7 @@ PackedVaryingsType MotionVectorVS(inout VaryingsType varyingsType, AttributesMes
     {
         bool hasDeformation = unity_MotionVectorsParams.x > 0.0; // Skin or morph target
         float3 effectivePositionOS = (hasDeformation ? inputPass.previousPositionOS : inputMesh.positionOS);
- #if defined(_ADDITIONAL_VELOCITY_CHANGE)
+ #if defined(_ADD_PRECOMPUTED_VELOCITY)
          effectivePositionOS -= inputPass.alembicVelocity; // <= this line
  #endif
         

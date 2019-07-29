@@ -194,12 +194,12 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline.Drawing
                 });
             });
 
-            ps.Add(new PropertyRow(CreateLabel("Additional Velocity Change", indentLevel)), (row) =>
+            ps.Add(new PropertyRow(CreateLabel("Add Precomputed Velocity", indentLevel)), (row) =>
             {
                 row.Add(new Toggle(), (toggle) =>
                 {
-                    toggle.value = m_Node.addVelocityChange.isOn;
-                    toggle.OnToggleChanged(ChangeAddVelocityChange);
+                    toggle.value = m_Node.addPrecomputedVelocity.isOn;
+                    toggle.OnToggleChanged(ChangeAddPrecomputedVelocity);
                 });
             });
 
@@ -372,12 +372,12 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline.Drawing
             m_Node.receiveSSR = td;
         }
 
-        void ChangeAddVelocityChange(ChangeEvent<bool> evt)
+        void ChangeAddPrecomputedVelocity(ChangeEvent<bool> evt)
         {
             m_Node.owner.owner.RegisterCompleteObjectUndo("Add Velocity Change");
-            ToggleData td = m_Node.addVelocityChange;
+            ToggleData td = m_Node.addPrecomputedVelocity;
             td.isOn = evt.newValue;
-            m_Node.addVelocityChange = td;
+            m_Node.addPrecomputedVelocity = td;
         }
 
         void ChangeUseLightFacingNormal(ChangeEvent<bool> evt)
