@@ -3,11 +3,13 @@
 * Getting started
   * [Getting Started with HDRP](Getting-started-with-HDRP)
   * [Upgrading to HDRP](Upgrading-To-HDRP)
-  * [Upgrading HDRP to a Later Unity Version](Upgrading-HDRP-Between-Major-Versions)
   * [Render Pipeline Wizard](Render-Pipeline-Wizard)
   * [Forward and Deferred Rendering](Forward-And-Deferred-Rendering)
   * [Exposing Advanced Properties](Advanced-Properties)
   * [VR in HDRP](VR-in-HDRP)
+* Upgrading HDRP between Unity Versions
+  * [2019.1 to 2019.2](Upgrading-from-2019.1-to-2019.2)
+  * [2019.2 to 2019.3](Upgrading-from-2019.2-to-2019.3)
 * Volume Framework
   * [Volumes](Volumes)
   * [Volume Profiles](Volume-Profile)
