@@ -55,6 +55,8 @@
     * [Layered Lit Shader](Layered-Lit-Shader)
     * [Lit Shader](Lit-Shader)
     * [Unlit Shader](Unlit-Shader)
+  * Shader Graph master nodes
+    * [Editing Master Nodes]()
 * Lighting
   * [Reflection in HDRP](Reflection-in-HDRP)
   * [Refraction in HDRP](Refraction-in-HDRP)
@@ -100,6 +102,10 @@
 * Debugging
   * [MatCap](MatCap)
   * [Render Pipeline Debug Window](Render-Pipeline-Debug-Window)
+* Tools
+  * Look Dev
+    - [Look Dev Window](Look-Dev)
+    - [Environment Library](Look-Dev-Environment-Library)
 * Customizing HDRP
   * [Camera-relative Rendering](Camera-Relative-Rendering)
   * [Creating a Custom Sky ](Creating-a-Custom-Sky)
