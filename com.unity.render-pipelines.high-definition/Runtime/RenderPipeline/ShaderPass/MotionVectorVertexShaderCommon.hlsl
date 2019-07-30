@@ -126,7 +126,7 @@ PackedVaryingsType MotionVectorVS(inout VaryingsType varyingsType, AttributesMes
         bool hasDeformation = unity_MotionVectorsParams.x > 0.0; // Skin or morph target
         float3 effectivePositionOS = (hasDeformation ? inputPass.previousPositionOS : inputMesh.positionOS);
  #if defined(_ADD_PRECOMPUTED_VELOCITY)
-         effectivePositionOS -= inputPass.alembicVelocity; // <= this line
+         effectivePositionOS -= inputPass.alembicVelocity;
  #endif
         
 

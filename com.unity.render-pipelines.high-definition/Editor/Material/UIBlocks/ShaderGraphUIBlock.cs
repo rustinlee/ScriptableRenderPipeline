@@ -170,7 +170,7 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
             enabled = EditorGUILayout.Toggle("Motion Vector For Vertex Animation", enabled);
             
             // We would like to automatically enable the motion vector pass (handled on material UI side)
-            // in case we have additional velocity change enabled in a graph. Due to serialization of material, changing
+            // in case we have add precomputed velocity enabled in a graph. Due to serialization of material, changing
             // a value in between shadergraph compilations would have no effect on a material, so we instead
             // inform the motion vector UI via the existence of the property at all and query against that.
             bool hasPrecomputedVelocity = materials[0].HasProperty(kAddPrecomputedVelocity);

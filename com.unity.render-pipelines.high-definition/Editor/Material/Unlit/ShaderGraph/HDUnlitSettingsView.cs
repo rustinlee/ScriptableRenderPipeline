@@ -262,7 +262,7 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline.Drawing
 
         void ChangeAddPrecomputedVelocity(ChangeEvent<bool> evt)
         {
-            m_Node.owner.owner.RegisterCompleteObjectUndo("Add Velocity Change");
+            m_Node.owner.owner.RegisterCompleteObjectUndo("Add Precomputed Velocity");
             ToggleData td = m_Node.addPrecomputedVelocity;
             td.isOn = evt.newValue;
             m_Node.addPrecomputedVelocity = td;

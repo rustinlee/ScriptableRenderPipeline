@@ -231,7 +231,7 @@ Shader "HDRP/LitTessellation"
 
         [ToggleUI] _SupportDecals("Support Decals", Float) = 1.0
         [ToggleUI] _ReceivesSSR("Receives SSR", Float) = 1.0
-        [ToggleUI] _AddPrecomputedVelocity("EnableAdditionalVelocity", Float) = 0.0
+        [ToggleUI] _AddPrecomputedVelocity("AddPrecomputedVelocity", Float) = 0.0
     }
 
     HLSLINCLUDE

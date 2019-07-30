@@ -287,6 +287,7 @@ namespace UnityEditor.Experimental.Rendering.HDPipeline
                 HDSubShaderUtilities.SetBlendModeForForward(ref pass);
 
                 pass.ExtraDefines.Remove("#ifndef DEBUG_DISPLAY\n#define SHADERPASS_FORWARD_BYPASS_ALPHA_TEST\n#endif");
+                
                 if (masterNode.surfaceType == SurfaceType.Opaque)
                 {
                     if (masterNode.alphaTest.isOn)
