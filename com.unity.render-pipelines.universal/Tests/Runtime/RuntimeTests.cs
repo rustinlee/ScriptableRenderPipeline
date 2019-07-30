@@ -44,6 +44,7 @@ class RuntimeTests
 
     // When switching to LWRP it sets "UniversalPipeline" as global shader tag.
     // When switching to Built-in it sets "" as global shader tag.
+    /* Commenting out per case 1157420
     [UnityTest]
     public IEnumerator PipelineSetsAndRestoreGlobalShaderTagCorrectly()
     {
@@ -59,4 +60,5 @@ class RuntimeTests
 
         Assert.AreEqual("", Shader.globalRenderPipeline, "Render Pipeline shader tag is not restored.");
     }
+    */
 }
