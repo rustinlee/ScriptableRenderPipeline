@@ -127,33 +127,28 @@ The Terrain Lit Shader is compatible with the built-in terrain system and suppor
 The HDRP light types use [physical light units](#PLU) to help you light your Scene in the most realistic way possible. The HDRP light types are:
 
 - **Directional**
-
-- - Color temperature
+  - Color temperature
   - Colored cookie
   - Shadow mask support
 
 - **Spot**
-
-- - Color temperature
+  - Color temperature
   - Colored cookie
   - Shadow mask support
   - Cone, pyramid and box shapes
 
 - **Point**
-
-- - Color temperature
+  - Color temperature
   - Colored cookie
   - Shadow mask support
 
-- **Area**
-
-- - Color temperature
+- **Rectangle**
+  - Color temperature
   - Colored Cookie
   - Shadow mask support
 
-- **Line**
-
-- - Color temperature
+- **Tube**
+  - Color temperature
   - No shadow masks
 
 For more information, including the full list of light properties, see the [Light component documentation](Light-Component.html).
