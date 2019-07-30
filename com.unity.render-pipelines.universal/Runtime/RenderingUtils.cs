@@ -58,9 +58,9 @@ namespace UnityEngine.Rendering.Universal
 
         internal static bool useStructuredBuffer
         {
-            // Currently we have some performance issues with StructuredBuffers in mobile.
-            // For now only support storing lights in StructuredBuffer on non-mobile platforms.
-            get => !Application.isMobilePlatform && SystemInfo.graphicsDeviceType != GraphicsDeviceType.OpenGLCore;
+            // There are some performance issues with StructuredBuffers in some platforms.
+            // We fallback to UBO in those cases.
+            get => !Application.isMobilePlatform && SystemInfo.graphicsDeviceType != GraphicsDeviceType.OpenGLCore && SystemInfo.graphicsDeviceType != GraphicsDeviceType.Switch;
         }
 
         static Material s_ErrorMaterial;
