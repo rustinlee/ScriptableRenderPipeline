@@ -7,7 +7,7 @@ namespace UnityEngine.Rendering.Universal
         private static class MainLightShadowConstantBuffer
         {
             public static int _WorldToShadow;
-            public static int _ShadowData;
+            public static int _ShadowParams;
             public static int _CascadeShadowSplitSpheres0;
             public static int _CascadeShadowSplitSpheres1;
             public static int _CascadeShadowSplitSpheres2;
@@ -45,7 +45,7 @@ namespace UnityEngine.Rendering.Universal
             m_CascadeSplitDistances = new Vector4[k_MaxCascades];
 
             MainLightShadowConstantBuffer._WorldToShadow = Shader.PropertyToID("_MainLightWorldToShadow");
-            MainLightShadowConstantBuffer._ShadowData = Shader.PropertyToID("_MainLightShadowData");
+            MainLightShadowConstantBuffer._ShadowParams = Shader.PropertyToID("_MainLightShadowParams");
             MainLightShadowConstantBuffer._CascadeShadowSplitSpheres0 = Shader.PropertyToID("_CascadeShadowSplitSpheres0");
             MainLightShadowConstantBuffer._CascadeShadowSplitSpheres1 = Shader.PropertyToID("_CascadeShadowSplitSpheres1");
             MainLightShadowConstantBuffer._CascadeShadowSplitSpheres2 = Shader.PropertyToID("_CascadeShadowSplitSpheres2");
@@ -204,9 +204,10 @@ namespace UnityEngine.Rendering.Universal
             float invShadowAtlasHeight = 1.0f / m_ShadowmapHeight;
             float invHalfShadowAtlasWidth = 0.5f * invShadowAtlasWidth;
             float invHalfShadowAtlasHeight = 0.5f * invShadowAtlasHeight;
+            float softShadowsProp = softShadows ? 1.0f : 0.0f;
             cmd.SetGlobalTexture(m_MainLightShadowmap.id, m_MainLightShadowmapTexture);
             cmd.SetGlobalMatrixArray(MainLightShadowConstantBuffer._WorldToShadow, m_MainLightShadowMatrices);
-            cmd.SetGlobalVector(MainLightShadowConstantBuffer._ShadowData, new Vector4(light.shadowStrength, 0.0f, 0.0f, 0.0f));
+            cmd.SetGlobalVector(MainLightShadowConstantBuffer._ShadowParams, new Vector4(light.shadowStrength, softShadowsProp, 0.0f, 0.0f));
 
             if (m_ShadowCasterCascadesCount > 1)
             {

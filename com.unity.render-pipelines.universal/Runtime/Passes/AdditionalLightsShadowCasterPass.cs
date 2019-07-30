@@ -9,7 +9,7 @@ namespace UnityEngine.Rendering.Universal
         private static class AdditionalShadowsConstantBuffer
         {
             public static int _AdditionalLightsWorldToShadow;
-            public static int _AdditionalShadowStrength;
+            public static int _AdditionalShadowParams;
             public static int _AdditionalShadowOffset0;
             public static int _AdditionalShadowOffset1;
             public static int _AdditionalShadowOffset2;
@@ -32,7 +32,7 @@ namespace UnityEngine.Rendering.Universal
 
         // Shader data for UBO path
         Matrix4x4[] m_AdditionalLightsWorldToShadow = null;
-        float[] m_AdditionalLightsShadowStrength = null;
+        Vector4[] m_AdditionalLightsShadowParams = null;
 
         // Shader data for SSBO
         ShaderInput.ShadowData[] m_AdditionalLightsShadowData = null;
@@ -47,7 +47,7 @@ namespace UnityEngine.Rendering.Universal
             renderPassEvent = evt;
 
             AdditionalShadowsConstantBuffer._AdditionalLightsWorldToShadow = Shader.PropertyToID("_AdditionalLightsWorldToShadow");
-            AdditionalShadowsConstantBuffer._AdditionalShadowStrength = Shader.PropertyToID("_AdditionalShadowStrength");
+            AdditionalShadowsConstantBuffer._AdditionalShadowParams = Shader.PropertyToID("_AdditionalShadowParams");
             AdditionalShadowsConstantBuffer._AdditionalShadowOffset0 = Shader.PropertyToID("_AdditionalShadowOffset0");
             AdditionalShadowsConstantBuffer._AdditionalShadowOffset1 = Shader.PropertyToID("_AdditionalShadowOffset1");
             AdditionalShadowsConstantBuffer._AdditionalShadowOffset2 = Shader.PropertyToID("_AdditionalShadowOffset2");
@@ -65,7 +65,7 @@ namespace UnityEngine.Rendering.Universal
                 // Preallocated a fixed size. CommandBuffer.SetGlobal* does allow this data to grow.
                 int maxLights = UniversalRenderPipeline.maxVisibleAdditionalLights;
                 m_AdditionalLightsWorldToShadow = new Matrix4x4[maxLights];
-                m_AdditionalLightsShadowStrength = new float[maxLights];
+                m_AdditionalLightsShadowParams = new Vector4[maxLights];
             }
         }
 
@@ -89,6 +89,7 @@ namespace UnityEngine.Rendering.Universal
                 m_AdditionalLightsShadowData = new ShaderInput.ShadowData[additionalLightsCount];
 
             int validShadowCastingLights = 0;
+            bool supportsSoftShadows = renderingData.shadowData.supportsSoftShadows;
             for (int i = 0; i < visibleLights.Length && m_AdditionalShadowCastingLightIndices.Count < additionalLightsCount; ++i)
             {
                 VisibleLight shadowLight = visibleLights[i];
@@ -114,16 +115,19 @@ namespace UnityEngine.Rendering.Universal
                         if (success)
                         {
                             m_AdditionalShadowCastingLightIndices.Add(i);
-                            float shadowStrength = shadowLight.light.shadowStrength;
+                            var light = shadowLight.light;
+                            float shadowStrength = light.shadowStrength;
+                            float softShadows = (supportsSoftShadows && light.shadows == LightShadows.Soft) ? 1.0f : 0.0f;
+                            Vector4 shadowParams = new Vector4(shadowStrength, softShadows, 0.0f, 0.0f);
                             if (m_UseStructuredBuffer)
                             {
                                 m_AdditionalLightsShadowData[shadowCastingLightIndex].worldToShadowMatrix = shadowTransform;
-                                m_AdditionalLightsShadowData[shadowCastingLightIndex].shadowStrength = shadowStrength;
+                                m_AdditionalLightsShadowData[shadowCastingLightIndex].shadowParams = shadowParams;
                             }
                             else
                             {
                                 m_AdditionalLightsWorldToShadow[shadowCastingLightIndex] = shadowTransform;
-                                m_AdditionalLightsShadowStrength[shadowCastingLightIndex] = shadowLight.light.shadowStrength;
+                                m_AdditionalLightsShadowParams[shadowCastingLightIndex] = shadowParams;
                             }
                             isValidShadowSlice = true;
                             validShadowCastingLights++;
@@ -149,19 +153,19 @@ namespace UnityEngine.Rendering.Universal
                     // setup slice data and reserve shadow map space even for invalid shadow slices.
                     // The data is setup with zero shadow strength. This has the same visual effect of no shadow
                     // attenuation contribution from this light.
-                    // This makes sampling shadow faster but introduces waste in shadowmap atlas.
+                    // This makes sampling shadow faster but introduces waste in shadow map atlas.
                     // The waste increases with the amount of additional lights to shade.
                     // Therefore Universal RP try to keep the limit at sane levels when using uniform buffers.
                     Matrix4x4 identity = Matrix4x4.identity;
                     m_AdditionalShadowCastingLightIndices.Add(i);
                     m_AdditionalLightsWorldToShadow[shadowCastingLightIndex] = identity;
-                    m_AdditionalLightsShadowStrength[shadowCastingLightIndex] = 0.0f;
+                    m_AdditionalLightsShadowParams[shadowCastingLightIndex] = Vector4.zero;
                     m_AdditionalLightSlices[shadowCastingLightIndex].viewMatrix = identity;
                     m_AdditionalLightSlices[shadowCastingLightIndex].projectionMatrix = identity;
                 }
             }
 
-            // Lights that need to be rendered in the shadowmap atlas
+            // Lights that need to be rendered in the shadow map atlas
             if (validShadowCastingLights == 0)
                 return false;
 
@@ -169,7 +173,7 @@ namespace UnityEngine.Rendering.Universal
             int atlasHeight = renderingData.shadowData.additionalLightsShadowmapHeight;
             int sliceResolution = ShadowUtils.GetMaxTileResolutionInAtlas(atlasWidth, atlasHeight, validShadowCastingLights);
 
-            // In the UI we only allow for square shadowmap atlas. Here we check if we can fit
+            // In the UI we only allow for square shadow map atlas. Here we check if we can fit
             // all shadow slices into half resolution of the atlas and adjust height to have tighter packing.
             int maximumSlices = (m_ShadowmapWidth / sliceResolution) * (m_ShadowmapHeight / sliceResolution);
             if (validShadowCastingLights <= (maximumSlices / 2))
@@ -189,7 +193,7 @@ namespace UnityEngine.Rendering.Universal
             {
                 // we can skip the slice if strength is zero. Some slices with zero
                 // strength exists when using uniform array path.
-                if (!m_UseStructuredBuffer && Mathf.Approximately(m_AdditionalLightsShadowStrength[i], 0.0f))
+                if (!m_UseStructuredBuffer && Mathf.Approximately(m_AdditionalLightsShadowParams[i].x, 0.0f))
                     continue;
 
                 m_AdditionalLightSlices[i].offsetX = (sliceIndex % shadowSlicesPerRow) * sliceResolution;
@@ -260,7 +264,7 @@ namespace UnityEngine.Rendering.Universal
                     // the uniform array path we might have zero strength shadow lights.
                     // In that case we need the shadow data buffer but we can skip
                     // rendering them to shadowmap.
-                    if (!m_UseStructuredBuffer && Mathf.Approximately(m_AdditionalLightsShadowStrength[i], 0.0f))
+                    if (!m_UseStructuredBuffer && Mathf.Approximately(m_AdditionalLightsShadowParams[i].x, 0.0f))
                         continue;
 
                     // Index of the VisibleLight
@@ -319,7 +323,7 @@ namespace UnityEngine.Rendering.Universal
                 {
                     ShaderInput.ShadowData data;
                     data.worldToShadowMatrix = m_AdditionalLightsShadowData[i].worldToShadowMatrix;
-                    data.shadowStrength = m_AdditionalLightsShadowData[i].shadowStrength;
+                    data.shadowParams = m_AdditionalLightsShadowData[i].shadowParams;
                     shadowBufferData[i] = data;
                 }
 
@@ -337,7 +341,7 @@ namespace UnityEngine.Rendering.Universal
             else
             {
                 cmd.SetGlobalMatrixArray(AdditionalShadowsConstantBuffer._AdditionalLightsWorldToShadow, m_AdditionalLightsWorldToShadow);
-                cmd.SetGlobalFloatArray(AdditionalShadowsConstantBuffer._AdditionalShadowStrength, m_AdditionalLightsShadowStrength);
+                cmd.SetGlobalVectorArray(AdditionalShadowsConstantBuffer._AdditionalShadowParams, m_AdditionalLightsShadowParams);
             }
 
             if (softShadows)

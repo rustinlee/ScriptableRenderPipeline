@@ -5,8 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [7.1.0] - 2019-XX-XX
+### Added
+- Added shader function `GetMainLightShadowParams`. This returns a half4 for the main light that packs shadow strength in x component and shadow soft property in y component.
+- Added shader function `GetAdditionalLightShadowParams`. This returns a half4 for an additional light that packs shadow strength in x component and shadow soft property in y component.
+
 ### Changed
-- Increased visible lights limit for the forward renderer. It now supports 32 visible lights in mobile platforms and 1024 in all other platforms.
+- Increased visible lights limit for the forward renderer. It now supports 32 visible lights in mobile platforms and Nintendo Switch, and 1024 in all other platforms that supports compute shaders.
 - Increased per-object lights limit for the forward renderer. It now supports 8 per-object lights in all platforms except GLES2. GLES2 supports 4 per-object lights.
 
 ### Fixed

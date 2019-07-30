@@ -20,7 +20,7 @@ struct LightData
 struct ShadowData
 {
     float4x4 worldToShadowMatrix;
-    float shadowStrength;
+    float4 shadowParams;
 };
 
 
