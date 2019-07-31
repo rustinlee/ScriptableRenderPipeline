@@ -49,7 +49,7 @@ projects:
     {% else %}
     - ssh -i ~/.ssh/id_rsa_macmini -o "StrictHostKeyChecking=no" bokken@$BOKKEN_DEVICE_IP 'cd ~/ScriptableRenderPipeline/TestProjects/{{ project.folder }} && ~/ScriptableRenderPipeline/TestProjects/{{ project.folder }}/utr/utr {{ testplatform.args }} --testproject=/Users/bokken/ScriptableRenderPipeline/TestProjects/{{ project.folder }} --editor-location=/Users/bokken/.Editor --artifacts_path=/Users/bokken/ScriptableRenderPipeline/TestProjects/{{ project.folder }}/test-results'
     {% endif %}
-    - mkdir -p ~/Unity-Technologies/ScriptableRenderPipeline/TestProjects/{{ project.folder }}/test-results/
+    - mkdir -p /home/bokken/build/output/Unity-Technologies/ScriptableRenderPipeline/TestProjects/{{ project.folder }}/test-results/
     - scp -i ~/.ssh/id_rsa_macmini -o "StrictHostKeyChecking=no" -r bokken@$BOKKEN_DEVICE_IP:/Users/bokken/ScriptableRenderPipeline/TestProjects/{{ project.folder }}/test-results/ /home/bokken/build/output/Unity-Technologies/ScriptableRenderPipeline/TestProjects/{{ project.folder }}/test-results/
     
   artifacts:
