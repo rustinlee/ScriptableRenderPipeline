@@ -4,7 +4,7 @@ platforms:
   - name: Windows64
     type: Unity::VM::GPU
     image: sdet/gamecode_win10:stable
-    flavor: m1.large
+    flavor: b1.large
   - name: OSX
     type: Unity::metal::macmini
     image: slough-ops/macos-10.14-xcode
