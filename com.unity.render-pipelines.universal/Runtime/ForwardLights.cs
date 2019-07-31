@@ -312,7 +312,7 @@ namespace UnityEngine.Rendering.Universal
             }
 
             // Disable all remaining lights we cannot fit into the global light buffer.
-            for (int i = directionalLightsCount + additionalLightsCount; i < visibleLights.Length; ++i)
+            for (int i = directionalLightsCount + additionalLightsCount; i < perObjectLightIndexMap.Length; ++i)
                 perObjectLightIndexMap[i] = -1;
 
             cullResults.SetLightIndexMap(perObjectLightIndexMap);
