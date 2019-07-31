@@ -61,6 +61,7 @@ namespace UnityEngine.Rendering.Universal
             // We fallback to UBO in those cases.
             get
             {
+                // We don't use SSBO in D3D because we can't figure out without adding shader variants if platforms is D3D10.
                 GraphicsDeviceType deviceType = SystemInfo.graphicsDeviceType;
                 return !Application.isMobilePlatform &&
                     (deviceType == GraphicsDeviceType.Metal || deviceType == GraphicsDeviceType.Vulkan ||
