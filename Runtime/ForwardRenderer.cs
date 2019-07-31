@@ -114,8 +114,14 @@ namespace UnityEngine.Rendering.LWRP
             if (renderingData.cameraData.isStereoEnabled && renderingData.cameraData.requiresDepthTexture)
                 requiresDepthPrepass = true;
 
+            // TODO: HACKY, remove once LWRP FFR issue is resolved
+            requiresDepthPrepass = false;
+
             bool createColorTexture = RequiresIntermediateColorTexture(ref renderingData, cameraTargetDescriptor)
                                       || rendererFeatures.Count != 0;
+
+            // TODO: HACKY, remove once LWRP FFR issue is resolved
+            createColorTexture = false;
 
             // If camera requires depth and there's no depth pre-pass we create a depth texture that can be read
             // later by effect requiring it.
