@@ -6,13 +6,13 @@
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderTypes.cs.hlsl"
 
-// There are some performance issues by using SSBO in mobile. Also some GPUs don't
-// supports SSBO in vertex shader.
-// For now only support storing lights in StructuredBuffer on some platforms.
-#if defined(SHADER_API_MOBILE) || defined(SHADER_API_GLCORE) || defined(SHADER_API_SWITCH)
-#define USE_STRUCTURED_BUFFER_FOR_LIGHT_DATA 0
-#else
+// There are some performance issues by using SSBO in mobile.
+// Also some GPUs don't supports SSBO in vertex shader.
+// Atm, we exclude D3D11 from using compute as we can't know at build time if it's using dx10 feature level or not
+#if !defined(SHADER_API_MOBILE) && (defined(SHADER_API_METAL) || defined(SHADER_API_VULKAN) || defined(SHADER_API_PS4) || defined(SHADER_API_XBOXONE))
 #define USE_STRUCTURED_BUFFER_FOR_LIGHT_DATA 1
+#else
+#define USE_STRUCTURED_BUFFER_FOR_LIGHT_DATA 0
 #endif
 
 struct InputData
